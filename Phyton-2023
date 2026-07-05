@@ -1,0 +1,156 @@
+import math
+
+while True:
+    print("_________________________________________________________\n")
+    print("Welcome to ConicCompanion!\n")
+    problem = input("Type 'H' or 'h' if your problem is about Hyperbola and 'P' or 'p' if it is about Parabola: ")
+
+    if problem == "H" or problem == "h":
+        print("Hyperbola Calculator\n")
+
+        try:
+            vertex_x1 = eval(input("Enter the x-coordinate of vertex 1: "))
+            vertex_y1 = eval(input("Enter the y-coordinate of vertex 1: "))
+            vertex_x2 = eval(input("Enter the x-coordinate of vertex 2: "))
+            vertex_y2 = eval(input("Enter the y-coordinate of vertex 2: "))
+            focus_x1 = eval(input("Enter the x-coordinate of focus 1: "))
+            focus_y1 = eval(input("Enter the y-coordinate of focus 1: "))
+            focus_x2 = eval(input("Enter the x-coordinate of focus 2: "))
+            focus_y2 = eval(input("Enter the y-coordinate of focus 2: "))
+
+            print("_________________________________________________________\n")
+            # Center (h, k)
+            h = round((vertex_x1 + vertex_x2) / 2)
+            k = round((vertex_y1 + vertex_y2) / 2)
+
+            # Semi-major axis (a)
+            a = round(math.sqrt((vertex_x1 - vertex_x2)**2 + (vertex_y1 - vertex_y2)**2) / 2)
+
+            # Distance of the Foci (2c)
+            c = round(math.sqrt((focus_x1 - focus_x2)**2 + (focus_y1 - focus_y2)**2))
+
+            # Distance from the center
+            cc = round(c / 2)
+
+            # Eccentricity (e)
+            e = round(c / (2 * a), 2)
+
+            # Semi-minor axis (b)
+            b = round(a * math.sqrt(e ** 2 - 1))
+
+            print("Center:", (h, k))
+            print("Semi-major axis (a):", a)
+            print("Semi-minor axis (b):", b)
+            print("Distance of Foci (c) to the Center:", cc)
+            print("Distance between two Foci (2c):", c)
+            print("Eccentricity: ", e)
+
+            # Standard form of hyperbola
+            if vertex_y1 == vertex_y2:
+                print("The Hyperbola is Horizontal")
+                if h < 0:
+                    horizontal = f"(x + {-h})^2 / {a * 2} - (y - {k})^2 / {b * 2} = 1"
+                else:
+                    horizontal = f"(x - {h})^2 / {a * 2} - (y - {k})^2 / {b * 2} = 1"
+                print("The Standard Form Equation is:", horizontal)
+            elif vertex_x1 == vertex_x2:
+                print("The Hyperbola is Vertical")
+                if k < 0:
+                    vertical = f"(y + {-k})^2 / {b * 2} - (x - {h})^2 / {a * 2} = 1"
+                else:
+                    vertical = f"(y - {k})^2 / {b * 2} - (x - {h})^2 / {a * 2} = 1"
+                print("The Standard Form Equation is:", vertical)
+
+            print("_________________________________________________________\n")
+            choice = input("Press 'c' to continue or 'q' to quit: ")
+            if choice.upper() == 'Q':
+                print("\nThank you for using the Hyperbola Calculator!")
+                break
+
+        except ValueError:
+            print("Invalid input. Please enter valid numerical values for coordinates.")
+
+    elif problem == "P" or problem == "p":
+        print("_________________________________________________________\n")
+        print("Parabola Calculator\n")
+
+        h = eval(input("Give the value of vertex h: "))
+        k = eval(input("Give the value of vertex k: "))
+        x = eval(input("Give the value of focus x: "))
+        y = eval(input("Give the value of focus y: "))
+
+        print("_________________________________________________________\n")
+        print("")
+
+        if h == x:
+            a = y - k
+            dtx = k - a
+            lr = 4 * a
+            if y > k:
+                print("Concavity: Upward", "\n",
+                      "Vertex: ", "(", h, ",", k, ")", "\n",
+                      "Focus: ", "(", x, ",", y, ")", "\n",
+                      "Latus Rectum (length): ", abs(lr), "\n",
+                      "Directrix: y =", dtx, "\n",
+                      "Axis of symmetry: x =", h)
+                if h > 0 and k > 0:
+                    print("Equation of the parabola: ( x -", h, ")^2=", lr, "( y-", k, ")")
+                elif h == x == k:
+                    print("Equation of the parabola: x^2 =", lr, "y")
+                else:
+                    print("Equation of the parabola: ( x +", abs(h), ")^2=", lr, "( y +", abs(k), ")")
+            else:
+                print("Concavity: Downward", "\n",
+                      "Vertex: ", "(", h, ",", k, ")", "\n",
+                      "Focus: ", "(", x, ",", y, ")", "\n",
+                      "Latus Rectum (lenght): ", abs(lr), "\n",
+                      "Directrix: y =", dtx, "\n",
+                      "Axis of symmetry: x =", h)
+                if h > 0 and k > 0:
+                    print("Equation of the parabola: ( x -", h, ")^2=", lr, "( y-", k, ")")
+                elif h == x == k:
+                    print("Equation of the parabola: x^2 =", lr, "y")
+                else:
+                    print("Equation of the parabola: ( x +", abs(h), ")^2=", lr, "( y +", abs(k), ")")
+
+        elif k == y:
+            a = x - h
+            dtx = h - a
+            lr = 4 * a
+            if x > h:
+                print("Concavity: Right", "\n",
+                      "Vertex: ", "(", h, ",", k, ")", "\n",
+                      "Focus: ", "(", x, ",", y, ")", "\n",
+                      "Latus Rectum (length): ", abs(lr), "\n",
+                      "Directrix: x =", dtx, "\n",
+                      "Axis of symmetry: y =", k)
+                if h > 0 and k > 0:
+                    print("Equation of the parabola: ( y -", k, ")^2=", lr, "( x-", h, ")")
+                elif h == k == y == 0:
+                    print("Equation of the parabola: y^2 =", lr, "x")
+                else:
+                    print("Equation of the parabola: ( y +", abs(k), ")^2=", lr, "( x +", abs(h), ")")
+            else:
+                print("Concavity: Left", "\n",
+                      "Vertex: ", "(", h, ",", k, ")", "\n",
+                      "Focus: ", "(", x, ",", y, ")", "\n",
+                      "Latus Rectum (lenght): ", abs(lr), "\n",
+                      "Directrix: x =", dtx, "\n",
+                      "Axis of symmetry: y =", k)
+                if h > 0 and k > 0:
+                    print("Equation of the parabola: ( y -", k, ")^2=", lr, "( x-", h, ")")
+                elif h == k == y == 0:
+                    print("Equation of the parabola: y^2 =", lr, "x")
+                else:
+                    print("Equation of the parabola: ( y +", abs(k), ")^2=", lr, "( x +", abs(h), ")")
+        else:
+            print("Invalid input. Please enter valid numerical values.")
+
+        print("_________________________________________________________\n")
+
+        choice = input("Press 'c' to continue or 'q' to quit: ")
+        if choice.upper() == 'Q':
+            print("\nThank you for using the Parabola Calculator!")
+            break
+    else:
+        print("Invalid input. Please enter 'H' or 'P'.")
