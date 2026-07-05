@@ -1,0 +1,228 @@
+library(readxl)
+library(writexl)
+library(ggplot2)
+data_path <- "C:/Users/Hebi/Documents/zeefeegee.xlsx"
+sheet_name <- "Business Data"
+data_trajectory <- read_excel(data_path, sheet_name)
+#ImportData
+DATE <- as.Date(c("2024-03-18", "2024-03-19", "2024-03-20", "2024-03-21", "2024-04-01", "2024-04-04", "2024-04-07", "2024-04-08", "2024-04-10", "2024-04-11", "2024-04-12", "2024-04-13", "2024-04-14",  "2024-04-17", "2024-04-18", "2024-04-19"))
+#Sales
+#Milktea
+sales_mt16 <- data_trajectory$`MILKTEA 16 OZ`
+sales_mt22 <- data_trajectory$`MILKTEA 22 OZ`
+s_sales_mt16 <- sales_mt16*28
+s_sales_mt22 <- sales_mt22*38
+t_sales_mt <- s_sales_mt16 + s_sales_mt22
+#BSMilktea
+sales_bsmt16 <- data_trajectory$`BROWN SUGAR MILKTEA 16 OZ`
+sales_bsmt22 <- data_trajectory$`BROWN SUGAR MILKTEA 22 OZ`
+s_sales_bsmt16 <- sales_bsmt16*48
+s_sales_bsmt22 <- sales_bsmt22*58
+t_sales_bsmt <- s_sales_bsmt16 + s_sales_bsmt22
+#IcedCoffee
+sales_ic16 <- data_trajectory$`ICED COFFEE 16 OZ`
+sales_ic22 <- data_trajectory$`ICED COFFEE 22 OZ`
+s_sales_ic16 <- sales_ic16*38
+s_sales_ic22 <- sales_ic16*48
+t_sales_ic <- s_sales_ic16 + s_sales_ic22
+#MatchaLatte
+sales_imt16 <- data_trajectory$`ICED MATCHA LATTE 16 OZ`
+sales_imt22 <- data_trajectory$`ICED MATCHA LATTE 22 OZ`
+s_sales_imt16 <- sales_imt16*38
+s_sales_imt22 <- sales_imt16*48
+t_sales_imt <- s_sales_imt16 + s_sales_imt22
+#FruitTea
+sales_ft16 <- data_trajectory$`FRUIT TEA 16 OZ`
+sales_ft22 <- data_trajectory$`FRUIT TEA 22 OZ`
+s_sales_ft16 <- sales_ft16*28
+s_sales_ft22 <- sales_ft16*38
+t_sales_ft <- s_sales_ft16 + s_sales_ft22
+#Frappe
+sales_fr16 <- data_trajectory$`FRAPPE 16 OZ`
+sales_fr22 <- data_trajectory$`FRAPPE 22 OZ`
+s_sales_fr16 <- sales_fr16*48
+s_sales_fr22 <- sales_fr22*58
+t_sales_fr <- s_sales_fr16 + s_sales_fr22
+#StrawberryOreo
+sales_sofr16 <- data_trajectory$`STRAWBERRY OREO 16 OZ`
+sales_sofr22 <- data_trajectory$`STRAWBERRY OREO 22 OZ`
+s_sales_sofr16 <- sales_sofr16*68
+s_sales_sofr22 <- sales_sofr22*78
+t_sales_sofr <- s_sales_sofr16 + s_sales_sofr22
+#Cafemocha
+sales_cmfr16 <- data_trajectory$`CAFÉ MOCHA 16 OZ`
+sales_cmfr22 <- data_trajectory$`CAFÉ MOCHA 22 OZ`
+s_sales_cmfr16 <- sales_cmfr16*78
+s_sales_cmfr22 <- sales_cmfr16*88
+t_sales_cmfr <- s_sales_cmfr16 + s_sales_cmfr22
+#hotcoffee
+sales_hcof <- data_trajectory$`HOT COFFEE`
+t_sales_hcof <- sales_hcof*28
+#hotchoco
+sales_hchoc <- data_trajectory$`HOT CHOCO`
+t_sales_hchoc <- sales_hchoc*28
+#Cookies
+sales_cookies <- data_trajectory$COOKIES
+t_sales_cookies <- sales_cookies*22
+#TotalExpectedSales
+EXPECTED <- (t_sales_mt + t_sales_bsmt + t_sales_ic + t_sales_imt + 
+               t_sales_ft + t_sales_fr + t_sales_sofr + t_sales_cmfr + t_sales_hcof + t_sales_hchoc+ t_sales_cookies)
+data_trajectory$`EXPECTED CASH`<- EXPECTED
+#Cash Management
+date <- data_trajectory$DATE
+STARTING <- data_trajectory$STARTING
+EXPENSES <- data_trajectory$EXPENSES
+REVENUE <- data_trajectory$`TOTAL REVENUE`
+GROSS <- EXPENSES + REVENUE
+`OVER/SHORT` <- REVENUE + EXPENSES - STARTING - EXPECTED
+data_trajectory$`OVER/SHORT` <- `OVER/SHORT`
+data_trajectory$`EXPECTED CASH`<- EXPECTED
+#Matrices
+#Sales Report Matrix
+salesreportmatrix <- data.frame(DATE, STARTING, GROSS, EXPENSES, REVENUE, EXPECTED, `OVER/SHORT`)
+print(salesreportmatrix)
+#Average, Max and Min
+`AVERAGE SALES` <- mean(GROSS)
+`AVERAGE OVER/SHORT` <- mean(`OVER/SHORT`)
+`AVERAGE EXPENSES` <- mean(EXPENSES)
+`HIGHEST SALE` <- max(GROSS)
+`LOWEST SALE` <- min(GROSS)
+average_sales_report <- data.frame(`AVERAGE SALES`, `AVERAGE OVER/SHORT`, `AVERAGE EXPENSES`, `HIGHEST SALE`, `LOWEST SALE`)
+print(average_sales_report)
+#Total Sales Matrix
+`TOTAL SALES` <- sum(GROSS)
+`TOTAL EXPENSES` <- sum(EXPENSES)
+`TOTAL REVENUE` <- sum(REVENUE)
+`TOTAL OVER/SHORT` <- sum(`OVER/SHORT`)
+total_sales_report <- data.frame(`TOTAL SALES`, `TOTAL EXPENSES`, `TOTAL OVER/SHORT`, `TOTAL REVENUE`)
+print(total_sales_report)
+summary_salesreportmatrix <- data.frame(`AVERAGE SALES`, `AVERAGE OVER/SHORT`, `AVERAGE EXPENSES`)
+#Total Sales Graph
+ggplot(data = salesreportmatrix, aes(x = DATE, y = GROSS)) +
+  geom_line(color = "red", size = 1.5) +
+  labs(title = "TOTAL SALES REPORT FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES")
+#Revenue Graph
+ggplot(data = salesreportmatrix, aes(x = DATE, y = REVENUE)) +
+  geom_line(color = "red", size = 1.5) +
+  labs(title = "TOTAL REVENUE FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "REVENUE")
+#Total Sales per Category
+#Best Seller
+label_best_seller <- c(Milktea = sum(t_sales_mt), `Brown Sugar Milktea` = sum(t_sales_bsmt), `Iced Coffee` = sum(t_sales_ic), `Matcha Latte` = sum(t_sales_imt), `Fruit Tea` = sum(t_sales_ft), `Frappe` = sum(t_sales_fr), `Strawberry Oreo Frappe` = sum(t_sales_sofr), `Cafe Mocha Frappe` = sum(t_sales_cmfr), `Hot Coffee` = sum(t_sales_hcof), `Hot Choco` = sum(t_sales_hchoc), `Cookies` = sum(t_sales_cookies))
+best_seller <- names(which.max(label_best_seller))
+#Graph per Category
+category_sales <- c(sum(t_sales_mt), sum(t_sales_bsmt), sum(t_sales_ic), sum(t_sales_imt),
+    sum(t_sales_ft), sum(t_sales_fr), sum(t_sales_sofr), sum(t_sales_cmfr), sum(t_sales_hcof), sum(t_sales_hchoc), sum(t_sales_cookies))
+categories <- c("Milktea", "BS Milktea", "Iced Coffee", "Matcha Latte", "Fruit Tea", "Frappe", "Strawberry Oreo", "Cafe Mocha", "Hot Coffee", "Hot Choco", "Cookies")
+category_sales_data <- data.frame(categories, category_sales)
+print(category_sales_data)
+category_order <- c("Milktea", "BS Milktea", "Iced Coffee", "Matcha Latte", "Fruit Tea", "Frappe", "Strawberry Oreo", "Cafe Mocha", "Hot Coffee", "Hot Choco", "Cookies")
+category_sales_data$categories <- factor(category_sales_data$categories, levels = category_order, ordered = TRUE)
+ggplot(category_sales_data, aes(x = categories, y = category_sales)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = paste("SALES PER CATEGORY.\nBest Seller:",best_seller),
+       x = "CATEGORY",
+       y = "SALES") +
+  theme_minimal()
+#Milktea Sales
+milktea_sales_data <- data.frame(DATE, sales_mt16, sales_mt22, t_sales_mt)
+print(milktea_sales_data)
+ggplot(milktea_sales_data, aes(x = DATE, y = t_sales_mt)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "MILKTEA SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Brown Sugar MT Sales
+bsmilktea_sales_data <- data.frame(DATE, sales_bsmt16, sales_bsmt22, t_sales_bsmt)
+print(bsmilktea_sales_data)
+ggplot(bsmilktea_sales_data, aes(x = DATE, y = t_sales_bsmt)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "BS MILKTEA SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Iced Coffee Sales
+ic_sales_data <- data.frame(DATE, sales_ic16, sales_ic22, t_sales_ic)
+print(ic_sales_data)
+ggplot(ic_sales_data, aes(x = DATE, y = t_sales_ic)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "ICED COFFEE SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Matcha Latte Sales
+print(imt_sales_data)
+imt_sales_data <- data.frame(DATE, sales_imt16, sales_imt22, t_sales_imt)
+ggplot(imt_sales_data, aes(x = DATE, y = t_sales_imt)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "MATCHA LATTE SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Fruit Tea Sales
+print(fr_sales_data)
+ft_sales_data <- data.frame(DATE, sales_ft16, sales_ft22, t_sales_ft)
+ggplot(ft_sales_data, aes(x = DATE, y = t_sales_ft)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "FRUIT TEA SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Frappe
+fr_sales_data <- data.frame(DATE, sales_fr16, sales_fr22, t_sales_fr)
+print(fr_sales_data)
+ggplot(fr_sales_data, aes(x = DATE, y = t_sales_fr)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "FRAPPE SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Strawberry Oreo
+sofr_sales_data <- data.frame(DATE, sales_sofr16, sales_sofr22, t_sales_sofr)
+print(sofr_sales_data)
+ggplot(sofr_sales_data, aes(x = DATE, y = t_sales_sofr)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "STRAWBERRY OREO SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Cafe Mocha
+cmfr_sales_data <- data.frame(DATE, sales_cmfr16, sales_cmfr22, t_sales_cmfr)
+print(cmfr_sales_data)
+ggplot(cmfr_sales_data, aes(x = DATE, y = t_sales_cmfr)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "CAFE MOCHA SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Hot Coffee
+hcof_sales_data <- data.frame(DATE, sales_hcof, t_sales_hcof)
+print(hcof_sales_data)
+ggplot(hcof_sales_data, aes(x = DATE, y = t_sales_hcof)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "HOT COFFEE SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#Hot Choco
+hchoc_sales_data <- data.frame(DATE, sales_hchoc, t_sales_hchoc)
+print(hchoc_sales_data)
+ggplot(hchoc_sales_data, aes(x = DATE, y = t_sales_hchoc)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "HOT CHOCO SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
+#COOKIES
+cookies_sales_data <- data.frame(DATE, sales_cookies, t_sales_cookies)
+print(cookies_sales_data)
+ggplot(cookies_sales_data, aes(x = DATE, y = t_sales_cookies)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "ORIGINAL COOKIES SALES FROM MARCH 18 to APRIL 19",
+       x = "DATE",
+       y = "SALES") +
+  theme_minimal()
